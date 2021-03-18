@@ -37,9 +37,12 @@
       </v-list-item-group>
     </v-list>
     <template v-slot:append>
-      <div class="pa-2" color="#ff9800">
-        <v-btn block>
+      <div class="pa-2">
+        <v-btn block color="#ffa726" v-if="!mini">
           Logout
+        </v-btn>
+        <v-btn color="#ffa726" small fab v-if="mini">
+          <v-icon>mdi-account-arrow-right</v-icon>
         </v-btn>
       </div>
     </template>
@@ -56,9 +59,9 @@
         lists: [
           { text: "My Profile", icon: "mdi-account-circle", link: "" },
           { text: "Control Panel", icon: "mdi-view-dashboard", link: "/ControlPanel" },
-          { text: "TODO1", icon: "mdi-view-dashboard", link: "" },
-          { text: "TODO2", icon: "mdi-view-dashboard", link: "" },
-          { text: "About", icon: "mdi-information", link: "/About" },
+          { text: "TODO1", icon: "mdi-view-dashboard", link: "/TODO1" },
+          { text: "TODO2", icon: "mdi-view-dashboard", link: "/TODO2" },
+          { text: "About", icon: "mdi-alert-circle-outline", link: "/About" },
         ],
       };
     },

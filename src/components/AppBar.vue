@@ -1,6 +1,8 @@
 <template>
   <v-app-bar app color="#37474f" flat dense dark>
-    <v-img :src="src" max-width="100"> </v-img>
+    <router-link to="/">
+      <v-img :src="src" max-width="100"> </v-img>
+    </router-link>
     <v-spacer></v-spacer>
 
     <v-btn icon>
@@ -9,6 +11,9 @@
 
     <v-btn icon>
       <v-icon>mdi-heart</v-icon>
+    </v-btn>
+    <v-btn icon>
+      <v-icon>mdi-github</v-icon>
     </v-btn>
   </v-app-bar>
 </template>
