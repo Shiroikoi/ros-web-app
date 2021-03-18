@@ -22,12 +22,11 @@
     <v-divider></v-divider>
     <v-list>
       <v-list-item-group>
-        <v-list-item v-for="list in lists" :key="list.text">
+        <v-list-item v-for="list in lists" :key="list.text" :to="list.link">
           <template v-slot:default="{ active }">
             <v-list-item-action>
               <v-icon :color="active ? color : 'white'">{{ list.icon }}</v-icon>
             </v-list-item-action>
-
             <v-list-item-content>
               <v-list-item-title>
                 {{ list.text }}
@@ -55,11 +54,11 @@
         mini: false,
         color: "#ffa726",
         lists: [
-          { text: "My Profile", icon: "mdi-account-circle" },
-          { text: "Control Panel", icon: "mdi-view-dashboard" },
-          { text: "My Profile", icon: "mdi-view-dashboard" },
-          { text: "My Profile", icon: "mdi-view-dashboard" },
-          { text: "About", icon: "mdi-information" },
+          { text: "My Profile", icon: "mdi-account-circle", link: "" },
+          { text: "Control Panel", icon: "mdi-view-dashboard", link: "/ControlPanel" },
+          { text: "TODO1", icon: "mdi-view-dashboard", link: "" },
+          { text: "TODO2", icon: "mdi-view-dashboard", link: "" },
+          { text: "About", icon: "mdi-information", link: "/About" },
         ],
       };
     },

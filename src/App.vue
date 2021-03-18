@@ -2,15 +2,15 @@
   <v-app>
     <AppBar />
     <NavigationDrawer />
-
-    <Main />
+    <v-main app>
+      <router-view />
+    </v-main>
   </v-app>
 </template>
 
 <script>
   import AppBar from "./components/AppBar";
   import NavigationDrawer from "./components/NavigationDrawer";
-  import Main from "./components/Main";
 
   export default {
     name: "App",
@@ -18,7 +18,6 @@
     components: {
       NavigationDrawer,
       AppBar,
-      Main,
     },
 
     data: () => ({
@@ -26,6 +25,4 @@
     }),
   };
 </script>
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>

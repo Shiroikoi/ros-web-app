@@ -1,5 +1,5 @@
 <template>
-  <v-main>
+  <v-container class="pa-0 ma-0" fluid>
     <v-tabs v-model="tab" color="#ffa726" background-color="#37474f" dark>
       <v-tab key="1">Robot State</v-tab>
       <v-tab key="2">Control Panel1</v-tab>
@@ -65,11 +65,11 @@
         </v-container>
       </v-tab-item>
     </v-tabs-items>
-  </v-main>
+  </v-container>
 </template>
 <script>
   export default {
-    name: "Main",
+    name: "ControlPanel",
     data: () => ({ tab: null, text: "123" }),
   };
 </script>
