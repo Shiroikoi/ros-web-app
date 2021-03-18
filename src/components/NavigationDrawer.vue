@@ -6,7 +6,14 @@
       </v-list-item-avatar>
       <v-list-item-content>
         <v-list-item-title>John Leider</v-list-item-title>
-        <v-list-item-subtitle>john@vuetifyjs.com</v-list-item-subtitle>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-list-item-subtitle v-bind="attrs" v-on="on">
+              john@vuetifyjs.com
+            </v-list-item-subtitle>
+          </template>
+          <span>Tooltip</span>
+        </v-tooltip>
       </v-list-item-content>
       <v-btn icon @click.stop="mini = !mini">
         <v-icon>mdi-chevron-left</v-icon>
@@ -15,43 +22,15 @@
     <v-divider></v-divider>
     <v-list>
       <v-list-item-group>
-        <v-list-item>
-          <v-list-item-icon>
-            <v-icon>mdi-view-dashboard</v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-content>
-            <v-list-item-title>123</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
-        <v-list-item>
-          <v-list-item-icon>
-            <v-icon>mdi-view-dashboard</v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-content>
-            <v-list-item-title>123</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item>
-          <v-list-item-icon>
-            <v-icon>mdi-view-dashboard</v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-content>
-            <v-list-item-title>123</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item>
+        <v-list-item v-for="list in lists" :key="list.text">
           <template v-slot:default="{ active }">
             <v-list-item-action>
-              <v-icon :color="active ? color : 'white'">mdi-view-dashboard</v-icon>
+              <v-icon :color="active ? color : 'white'">{{ list.icon }}</v-icon>
             </v-list-item-action>
 
             <v-list-item-content>
               <v-list-item-title>
-                123
+                {{ list.text }}
               </v-list-item-title>
             </v-list-item-content>
           </template>
@@ -71,12 +50,19 @@
   export default {
     name: "NavigationDrawer",
     data: function() {
-      return { drawer: true, mini: false, color: "#ffa726" };
+      return {
+        drawer: true,
+        mini: false,
+        color: "#ffa726",
+        lists: [
+          { text: "My Profile", icon: "mdi-account-circle" },
+          { text: "Control Panel", icon: "mdi-view-dashboard" },
+          { text: "My Profile", icon: "mdi-view-dashboard" },
+          { text: "My Profile", icon: "mdi-view-dashboard" },
+          { text: "About", icon: "mdi-information" },
+        ],
+      };
     },
   };
 </script>
-<style lang="scss" scoped>
-  .class1 {
-    color: #ffa726 !important;
-  }
-</style>
+<style lang="scss" scoped></style>

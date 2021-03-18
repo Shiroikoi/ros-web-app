@@ -1,13 +1,15 @@
 <template>
-  <v-app-bar app color="#37474f" dark>
+  <v-app-bar app color="#37474f" flat dense dark>
     <v-img :src="src" max-width="100"> </v-img>
-    <template v-slot:extension>
-      <v-tabs align-with-title color="#ffa726">
-        <v-tab>Tab 1</v-tab>
-        <v-tab>Tab 2</v-tab>
-        <v-tab>Tab 3</v-tab>
-      </v-tabs>
-    </template>
+    <v-spacer></v-spacer>
+
+    <v-btn icon>
+      <v-icon>mdi-magnify</v-icon>
+    </v-btn>
+
+    <v-btn icon>
+      <v-icon>mdi-heart</v-icon>
+    </v-btn>
   </v-app-bar>
 </template>
 
