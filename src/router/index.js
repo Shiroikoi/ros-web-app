@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+//import axios from "axios";
 import ControlPanel from "../views/ControlPanel";
 import About from "../views/About";
 import TODO1 from "../views/TODO1";
@@ -16,27 +17,27 @@ const routes = [
     component: Index,
   },
   {
-    path: "/ControlPanel",
+    path: "/controlpanel",
     name: "ControlPanel",
     component: ControlPanel,
   },
   {
-    path: "/About",
+    path: "/about",
     name: "About",
     component: About,
   },
   {
-    path: "/TODO1",
+    path: "/todo1",
     name: "TODO1",
     component: TODO1,
   },
   {
-    path: "/TODO2",
+    path: "/todo2",
     name: "TODO2",
     component: TODO2,
   },
   {
-    path: "/Login",
+    path: "/login",
     name: "Login",
     component: Login,
   },
@@ -48,7 +49,7 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.name !== "Login" && true) next({ name: "Login" });
+  if (to.name !== "Login" && to.name !== "Index") next({ name: "Login" });
   else next();
 });
 
