@@ -56,14 +56,21 @@
         drawer: true,
         mini: false,
         color: "#ffa726",
-        lists: [
-          { text: "My Profile", icon: "mdi-account-circle", link: "" },
-          { text: "Control Panel", icon: "mdi-view-dashboard", link: "/ControlPanel" },
-          { text: "TODO1", icon: "mdi-view-dashboard", link: "/TODO1" },
-          { text: "TODO2", icon: "mdi-view-dashboard", link: "/TODO2" },
-          { text: "About", icon: "mdi-alert-circle-outline", link: "/About" },
-        ],
       };
+    },
+    computed: {
+      userID: function() {
+        return this.$store.state.userID;
+      },
+      lists: function() {
+        return [
+          { text: "My Profile", icon: "mdi-account-details", link: "" },
+          { text: "Control Panel", icon: "mdi-view-dashboard", link: `/user/${this.userID}/ControlPanel` },
+          { text: "TODO1", icon: "mdi-view-dashboard", link: "/user/" + this.userID + "/TODO1" },
+          { text: "TODO2", icon: "mdi-view-dashboard", link: `/user/${this.userID}/TODO2` },
+          { text: "About", icon: "mdi-alert-circle-outline", link: `/user/${this.userID}/About` },
+        ];
+      },
     },
   };
 </script>

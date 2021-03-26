@@ -8,7 +8,7 @@
               <h2>Login</h2>
             </v-col>
             <v-col cols="12" class="pb-0">
-              <v-form ref="form" v-model="valid" @submit.prevent lazy-validation>
+              <v-form ref="form" @submit.prevent lazy-validation>
                 <v-text-field
                   v-model="email"
                   clear-icon="mdi-close-circle"
@@ -20,8 +20,9 @@
                 ></v-text-field>
                 <v-text-field
                   v-model="password"
-                  :type="show1 ? 'text' : 'password'"
-                  :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                  :type="show ? 'text' : 'password'"
+                  :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+                  :rules="passwordRules"
                   clear-icon="mdi-close-circle"
                   clearable
                   @click:clear="clearPassword"
@@ -29,19 +30,23 @@
                   label="Password"
                   required
                 ></v-text-field>
-                <v-checkbox v-model="checkbox" :rules="[(v) => !!v || 'You must agree to continue!']" label="Do you agree?" required></v-checkbox>
               </v-form>
             </v-col>
             <v-col cols="12" class="pt-0">
-              <v-btn small :disabled="!valid" color="success" class="mr-4" @click="validate">
-                Validate
-              </v-btn>
               <v-btn small color="error" class="mr-4" @click="reset">
                 Reset Form
               </v-btn>
               <v-btn small type="submit" color="success" @click="submit">
                 Submit
               </v-btn>
+              <v-dialog width="500" v-model="showDialog">
+                <template v-slot:activator="activator">
+                  <v-btn color="red lighten-2" dark v-bind="activator.value">
+                    Click Me
+                  </v-btn>
+                </template>
+                <span>dialog</span>
+              </v-dialog>
             </v-col>
           </v-row>
         </v-sheet>
@@ -50,39 +55,42 @@
   </v-container>
 </template>
 <script>
-  import axios from "axios";
+  import { mapState } from "vuex";
   export default {
     name: "Login",
     data: () => ({
+      showDialog: false,
       email: "",
       password: "",
       show: false,
-      valid: true,
       emailRules: [(v) => !!v || "E-mail is required", (v) => /.+@.+\..+/.test(v) || "E-mail must be valid"],
-
-      checkbox: false,
+      passwordRules: [(v) => !!v || "password is required"],
     }),
+    computed: mapState(["loginState", "auth", "userID", "token"]),
 
     methods: {
-      submit() {
-        let _this = this;
+      showD() {
+        this.showDialog = true;
+      },
+      async submit() {
         if (!this.validate()) {
-          console.log(1);
+          console.log("invalided");
         } else {
-          let data = { email: this.email, password: this.password };
-          axios
-            .post("http://localhost:3000/auth", data)
-            .then(function(response) {
-              console.log(response);
-              if (response.status == "200") {
-                _this.$router.push({path:"/"});
-              } else if (response.status == "403") {
-                console.log(2);
-              }
-            })
-            .catch(function(error) {
-              console.log(error);
-            });
+          await this.$store.dispatch("login", { email: this.email, password: this.password });
+          if (this.loginState == -3) {
+            console.log("network");
+          } else if (this.loginState == -2) {
+            console.log(1);
+            this.showDialog = true;
+            console.log("password");
+          } else if (this.loginState == -1) {
+            console.log("usernotfound");
+          } else if (this.auth == true) {
+            console.log("sucess");
+            console.log(this.token);
+            localStorage.setItem("ROS-token", this.token);
+            this.$router.push({ path: "/user/" + this.userID });
+          }
         }
       },
       validate() {
