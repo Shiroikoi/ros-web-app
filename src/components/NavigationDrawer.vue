@@ -38,7 +38,7 @@
     </v-list>
     <template v-slot:append>
       <div class="pa-2">
-        <v-btn block color="#ffa726" v-if="!mini">
+        <v-btn block color="#ffa726" v-if="!mini" @click="logout">
           Logout
         </v-btn>
         <v-btn color="#ffa726" small fab v-if="mini">
@@ -49,6 +49,7 @@
   </v-navigation-drawer>
 </template>
 <script>
+  import { mapState } from "vuex";
   export default {
     name: "NavigationDrawer",
     data: function() {
@@ -59,9 +60,6 @@
       };
     },
     computed: {
-      userID: function() {
-        return this.$store.state.userID;
-      },
       lists: function() {
         return [
           { text: "My Profile", icon: "mdi-account-details", link: "" },
@@ -70,6 +68,15 @@
           { text: "TODO2", icon: "mdi-view-dashboard", link: `/user/${this.userID}/TODO2` },
           { text: "About", icon: "mdi-alert-circle-outline", link: `/user/${this.userID}/About` },
         ];
+      },
+      ...mapState(["loginState", "auth", "userID", "token"]),
+    },
+    methods: {
+      async logout() {
+        await this.$store.dispatch("logout");
+
+        localStorage.setItem("ROS-token", this.token);
+        this.$router.push({ path: "/login" });
       },
     },
   };

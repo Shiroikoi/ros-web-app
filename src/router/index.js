@@ -5,26 +5,23 @@ import ControlPanel from "../components/ControlPanel";
 import About from "../components/About";
 import TODO1 from "../components/TODO1";
 import TODO2 from "../components/TODO2";
-import Index from "../components/Index";
+//import Index from "../components/Index";
 import Login from "../components/Login";
 import layout from "../views/layout";
-import layout2 from "../views/layout2";
+//import layout2 from "../views/layout2";
+import layout3 from "../views/layout3";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
-    component: layout2,
+    name: "Index",
+    component: layout3,
     children: [
       {
-        name: "Home",
-        path: "/",
-        component: Index,
-      },
-      {
-        path: "login",
         name: "Login",
+        path: "login",
         component: Login,
       },
     ],
@@ -65,13 +62,20 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  if (to.name == "Index" || to.name == "Login") {
+  if (to.name == "Index") {
     next();
+  } else if (to.name == "Login") {
+    if (localStorage.getItem("ROS-token")) {
+      await store.dispatch("auth", localStorage.getItem("ROS-token")).catch(() => {});
+      store.state.auth ? next({ path: "/user/" + store.state.userID }) : next();
+    } else {
+      next();
+    }
   } else if (!localStorage.getItem("ROS-token")) {
-    next({ name: "Login" });
+    next({ path: "/login?deny=1" });
   } else {
-    await store.dispatch("auth", localStorage.getItem("ROS-token"));
-    store.state.auth ? next() : next({ name: "Login" });
+    await store.dispatch("auth", localStorage.getItem("ROS-token")).catch(() => {});
+    store.state.auth ? next() : next({ path: "/login?deny=1" });
   }
 });
 

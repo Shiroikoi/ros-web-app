@@ -1,15 +1,15 @@
 import axios from "axios";
-export default function authGET(cb1, header) {
+export default function authGET(authSucess, header) {
   return new Promise((rs, rj) => {
     axios
-      .get("http://localhost:3000/auth", { headers: { "ROS-Token": header } })
-      .then(function(res) {
-        if (res.status == "200") {
-          console.log(res);
+      .get("http://100.2.34.28:3000/auth", { headers: { "ROS-Token": header } })
+      .then(function(response) {
+        if (response.status == "200") {
+          console.log(response);
+          authSucess(response.headers["ros-userid"]);
           rs();
-          cb1();
-        } else if (res.status == "403") {
-          console.log(res);
+        } else if (response.status == "403") {
+          console.log(response);
           rj();
         }
       })

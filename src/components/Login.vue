@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row justify="center">
-      <v-col cols="auto">
+      <v-col cols="auto" :class="deny ? 'animate__animated animate__tada' : ''">
         <v-sheet elevation="6" shaped height="400" width="450" class="pa-6" color="#62727b" dark>
           <v-row justify="center" align="center">
             <v-col cols="auto">
@@ -58,7 +58,18 @@
   import { mapState } from "vuex";
   export default {
     name: "Login",
+    beforeRouteEnter(to, from, next) {
+      console.log(to);
+      if (to.fullPath.match("deny=1")) {
+        next((vm) => {
+          vm.deny = true;
+        });
+      } else {
+        next();
+      }
+    },
     data: () => ({
+      deny: false,
       showDialog: false,
       email: "",
       password: "",
