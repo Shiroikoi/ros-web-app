@@ -6,20 +6,33 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
     <title><%= htmlWebpackPlugin.options.title %></title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
     <script src="<%= BASE_URL %>three.min.js"></script>
     <script src="<%= BASE_URL %>ColladaLoader.patched.js"></script>
     <script src="<%= BASE_URL %>STLLoader.js"></script>
+    <script src="<%= BASE_URL %>easeljs.min.js"></script>
     <script src="<%= BASE_URL %>eventemitter2.js"></script>
+    <script src="<%= BASE_URL %>ros2d.min.js"></script>
     <script src="<%= BASE_URL %>roslib.min.js"></script>
     <script src="<%= BASE_URL %>ros3d.min.js"></script>
   </head>
   <body>
     <noscript>
       <strong
-        >We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong
+        >We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work
+        properly without JavaScript enabled. Please enable it to
+        continue.</strong
       >
     </noscript>
     <div id="app"></div>

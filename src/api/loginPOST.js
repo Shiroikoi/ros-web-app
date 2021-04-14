@@ -2,7 +2,7 @@ import axios from "axios";
 export default function loginPOST(authSucess, passwordIncorrect, userNotFound, networkIssue, data) {
   return new Promise((reslove, reject) => {
     axios
-      .post("http://100.2.34.28:3000/auth", data)
+      .post("http://100.2.43.221:3000/auth", data)
       .then(function(response) {
         if (response.status == "200") {
           console.log(response);

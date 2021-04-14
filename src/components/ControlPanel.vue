@@ -10,13 +10,23 @@
         <v-container>
           <v-row justify="center">
             <v-col cols="auto">
-              <v-card width="650" height="500">
+              <v-card width="650" height="600">
                 <v-container>
                   <v-row justify="center">
                     <v-col cols="8">
-                      <v-text-field v-model="url" label="type websocket address here">
+                      <v-text-field
+                        v-model="url"
+                        label="type websocket address here"
+                      >
                         <template v-slot:append-outer>
-                          <v-btn small color="#ffa726" tile :loading="loading" :disabled="loading" @click="connect">
+                          <v-btn
+                            small
+                            color="#ffa726"
+                            tile
+                            :loading="loading"
+                            :disabled="loading"
+                            @click="connect"
+                          >
                             connect
                           </v-btn>
                         </template>
@@ -27,14 +37,18 @@
               </v-card>
             </v-col>
             <v-col cols="auto">
-              <v-card width="350" height="500">
+              <v-card width="350" height="600">
                 <v-container>
                   <v-row justify="center">
                     <v-col cols="auto"><img width="180" height="180" /> </v-col>
                     <v-col cols="auto" class="px-8 py-0">
                       connected:
-                      <v-icon v-if="connected" color="success">mdi-check-bold</v-icon>
-                      <v-icon v-if="!connected" color="red">mdi-close-thick</v-icon>
+                      <v-icon v-if="connected" color="success"
+                        >mdi-check-bold</v-icon
+                      >
+                      <v-icon v-if="!connected" color="red"
+                        >mdi-close-thick</v-icon
+                      >
                     </v-col>
                   </v-row>
                 </v-container>
@@ -45,17 +59,19 @@
       </v-tab-item>
 
       <v-tab-item key="2">
-        <v-container>
+        <v-container class="">
           <v-row justify="center">
             <v-col cols="auto">
-              <v-card width="750" height="520">
+              <v-card width="900" height="600">
                 <v-container class="pa-0">
-                  <div id="urdf"></div>
+                  <div id="view"></div>
                 </v-container>
               </v-card>
             </v-col>
             <v-col cols="auto" class="pl-0">
-              <v-card width="300" height="520"> </v-card>
+              <v-card width="200" height="600">
+                <v-btn @click="addView">add view</v-btn>
+              </v-card>
             </v-col>
           </v-row>
         </v-container>
@@ -63,18 +79,18 @@
 
       <v-tab-item key="3">
         <v-container>
-          <v-row>
-            <v-col cols="6">
-              <v-skeleton-loader elevation="2" class="mx-auto" type="table-heading, list-item-two-line, image, table-tfoot"></v-skeleton-loader>
+          <v-row justify="center">
+            <v-col cols="auto">
+              <v-card width="800" height="600">
+                <v-container class="pa-0">
+                  <div id="map"></div>
+                </v-container>
+              </v-card>
             </v-col>
-            <v-col cols="6">
-              <v-skeleton-loader elevation="2" class="mx-auto" type="table-heading, list-item-two-line, image, table-tfoot"></v-skeleton-loader>
-            </v-col>
-            <v-col cols="6">
-              <v-skeleton-loader elevation="2" class="mx-auto" type="list-item-avatar"></v-skeleton-loader>
-            </v-col>
-            <v-col cols="6">
-              <v-skeleton-loader elevation="2" class="mx-auto" type="list-item-avatar"></v-skeleton-loader>
+            <v-col cols="auto" class="pl-0">
+              <v-card width="300" height="600">
+                <v-btn @click="addMap">add map</v-btn>
+              </v-card>
             </v-col>
           </v-row>
         </v-container>
@@ -85,7 +101,15 @@
 <script>
   export default {
     name: "ControlPanel",
-    data: () => ({ tab: null, text: "123", connected: false, loading: false, url: "" }),
+    data: () => ({
+      tab: null,
+      text: "123",
+      connected: false,
+      loading: false,
+      url: "",
+      tfClient: null,
+      urdfClient: null,
+    }),
     methods: {
       connect() {
         this.loading = true;
@@ -121,6 +145,28 @@
         this.$store.state.ROS.on("close", function() {
           console.log("closed");
           cb(-1);
+        });
+      },
+      addView() {
+        let VNC = document.createElement("iframe");
+        let view = document.querySelector("#view");
+        VNC.src = "http://100.2.159.185:8080/guacamole/";
+        VNC.width = "100%";
+        VNC.height = "600px";
+        view.append(VNC);
+      },
+      addMap() {
+        let ros = new window.ROSLIB.Ros({
+          url: "ws://100.2.159.185:9090",
+        });
+        window.viewer = new window.ROS2D.Viewer({
+          divID: "map",
+          width: 800,
+          height: 600,
+        });
+        new window.ROS2D.OccupancyGridClient({
+          ros: ros,
+          rootObject: window.viewer.scene,
         });
       },
     },
