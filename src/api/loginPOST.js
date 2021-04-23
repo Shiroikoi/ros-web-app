@@ -1,5 +1,11 @@
 import axios from "axios";
-export default function loginPOST(authSucess, passwordIncorrect, userNotFound, networkIssue, data) {
+export default function loginPOST(
+  authSucess,
+  passwordIncorrect,
+  userNotFound,
+  networkIssue,
+  data
+) {
   return new Promise((reslove, reject) => {
     axios
       .post("http://100.2.43.221:3000/auth", data)
@@ -7,8 +13,12 @@ export default function loginPOST(authSucess, passwordIncorrect, userNotFound, n
         if (response.status == "200") {
           console.log(response);
           authSucess(response.headers["ros-userid"]);
-          reslove(response.headers["ros-token"]);
-          reslove();
+          let headers = {
+            token: response.headers["ros-token"],
+            name: response.headers["ros-name"],
+            email: response.headers["ros-email"],
+          };
+          reslove(headers);
         } else if (response.status == "401") {
           console.log(response);
         }

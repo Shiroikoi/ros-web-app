@@ -6,6 +6,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    name: null,
+    email: null,
     loginState: 0,
     auth: false,
     userID: null,
@@ -40,6 +42,10 @@ export default new Vuex.Store({
     setToken(state, token) {
       state.token = token;
     },
+    setName(state, name) {
+      state.name = name.name;
+      state.email = name.email;
+    },
   },
   actions: {
     async logout({ commit }) {
@@ -63,8 +69,9 @@ export default new Vuex.Store({
         () => commit("authFailed") || commit("networkIssue"),
         data
       )
-        .then((token) => {
-          commit("setToken", token);
+        .then((obj) => {
+          commit("setToken", obj);
+          commit("setName", obj);
         })
         .catch((err) => {
           console.log(err);

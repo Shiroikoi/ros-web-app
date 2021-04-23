@@ -3,7 +3,7 @@
     <v-tooltip bottom>
       <template v-slot:activator="{ on, attrs }">
         <router-link to="/">
-          <v-img :src="src" max-width="100" v-bind="attrs" v-on="on"> </v-img>
+          <v-img :src="src" max-width="110" v-bind="attrs" v-on="on"> </v-img>
         </router-link>
       </template>
       <span>Index page</span>

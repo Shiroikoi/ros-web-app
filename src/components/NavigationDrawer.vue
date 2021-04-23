@@ -1,15 +1,22 @@
 <template>
-  <v-navigation-drawer v-model="drawer" :mini-variant.sync="mini" color="#62727b" app permanent dark>
+  <v-navigation-drawer
+    v-model="drawer"
+    :mini-variant.sync="mini"
+    color="#62727b"
+    app
+    permanent
+    dark
+  >
     <v-list-item class="px-2">
       <v-list-item-avatar>
-        <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
+        <v-img :src="require('../assets/logo.svg')"></v-img>
       </v-list-item-avatar>
       <v-list-item-content>
-        <v-list-item-title>John Leider</v-list-item-title>
+        <v-list-item-title>{{ name }}</v-list-item-title>
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
             <v-list-item-subtitle v-bind="attrs" v-on="on">
-              john@vuetifyjs.com
+              {{ email }}
             </v-list-item-subtitle>
           </template>
           <span>Tooltip</span>
@@ -63,13 +70,29 @@
       lists: function() {
         return [
           { text: "My Profile", icon: "mdi-account-details", link: "" },
-          { text: "Control Panel", icon: "mdi-view-dashboard", link: `/user/${this.userID}/ControlPanel` },
-          { text: "TODO1", icon: "mdi-view-dashboard", link: "/user/" + this.userID + "/TODO1" },
-          { text: "TODO2", icon: "mdi-view-dashboard", link: `/user/${this.userID}/TODO2` },
-          { text: "About", icon: "mdi-alert-circle-outline", link: `/user/${this.userID}/About` },
+          {
+            text: "Control Panel",
+            icon: "mdi-view-dashboard",
+            link: `/user/${this.userID}/ControlPanel`,
+          },
+          {
+            text: "TODO1",
+            icon: "mdi-view-dashboard",
+            link: "/user/" + this.userID + "/TODO1",
+          },
+          {
+            text: "TODO2",
+            icon: "mdi-view-dashboard",
+            link: `/user/${this.userID}/TODO2`,
+          },
+          {
+            text: "About",
+            icon: "mdi-alert-circle-outline",
+            link: `/user/${this.userID}/About`,
+          },
         ];
       },
-      ...mapState(["loginState", "auth", "userID", "token"]),
+      ...mapState(["loginState", "auth", "userID", "token", "name", "email"]),
     },
     methods: {
       async logout() {
