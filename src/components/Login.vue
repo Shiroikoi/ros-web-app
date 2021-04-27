@@ -108,8 +108,7 @@
             console.log("usernotfound");
           } else if (this.auth == true) {
             console.log("sucess");
-            console.log(this.token);
-            localStorage.setItem("ROS-token", this.token);
+            localStorage.setItem("ROS-token", this.token.token);
             this.$router.push({ path: "/user/" + this.userID });
           }
         }

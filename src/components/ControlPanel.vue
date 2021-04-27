@@ -248,24 +248,34 @@
                       </v-text-field>
                     </v-col>
                   </v-row>
-                  <v-row justify="center" class="pt-1">
+                  <v-row>
+                    <v-col cols="4" class="pb-0">
+                      <v-text-field dense label="linear" v-model="linear">
+                      </v-text-field>
+                    </v-col>
+                    <v-col cols="4" class="pb-0">
+                      <v-text-field dense label="angular" v-model="angular">
+                      </v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row justify="center" class="pt-0">
                     <v-col class="py-0"
                       ><v-switch inset label="keyboard controll"></v-switch
                     ></v-col>
                     <v-col cols="12" class="text-center">
-                      <v-btn>forward</v-btn>
+                      <v-btn @click="forward">forward</v-btn>
                     </v-col>
                     <v-col>
-                      <v-btn>left</v-btn>
+                      <v-btn @click="left">left</v-btn>
                     </v-col>
                     <v-col>
-                      <v-btn color="red">stop</v-btn>
+                      <v-btn @click="stop" color="red">stop</v-btn>
                     </v-col>
                     <v-col>
-                      <v-btn>right</v-btn>
+                      <v-btn @click="right">right</v-btn>
                     </v-col>
                     <v-col cols="12" class="text-center">
-                      <v-btn>down</v-btn>
+                      <v-btn @click="down">down</v-btn>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -281,6 +291,8 @@
   export default {
     name: "ControlPanel",
     data: () => ({
+      linear: 0.01,
+      angular: 0.1,
       scaleX: 0,
       shiftX: 0,
       shiftY: 0,
@@ -302,6 +314,8 @@
       getParamType: null,
       setParamName: null,
       setParamType: null,
+      velocity: null,
+      cmdVel: null,
       handel: function(event) {
         if (event.code == "KeyA") {
           return null;
@@ -389,13 +403,31 @@
       addView() {
         let VNC = document.createElement("iframe");
         let view = document.querySelector("#view");
-        VNC.src = "http://100.2.199.124:8080/guacamole/#/?username=admin&password=admin";
+        VNC.src =
+          "http://100.2.199.124:8080/guacamole/#/?username=admin&password=admin";
         VNC.width = "100%";
         VNC.height = "600px";
         view.append(VNC);
       },
       addMap() {
+        this.velocity = {
+          linear: {
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+          },
+          angular: {
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+          },
+        };
         let that = this;
+        this.cmdVel = new window.ROSLIB.Topic({
+          ros: that.ROS,
+          name: "/cmd_vel",
+          messageType: "geometry_msgs/Twist",
+        });
         let map = document.querySelector("#map");
         if (map.firstChild) map.firstChild.remove();
         window.viewer = new window.ROS2D.Viewer({
@@ -410,7 +442,7 @@
 
         let stage = window.viewer.scene.getStage();
         let robotMarker = new window.ROS2D.NavigationArrow({
-          size: 0.2, //25
+          size: 0.3, //25
           strokeSize: 0.01,
           fillColor: window.createjs.Graphics.getRGB(255, 128, 0, 0.66),
           pulse: false,
@@ -419,31 +451,48 @@
         window.viewer.scene.addChild(robotMarker);
         let poseListener = new window.ROSLIB.Topic({
           ros: that.ROS,
-          name: "/tf",
-          messageType: "tf2_msgs/TFMessage",
-          throttle_rate: 1,
+          name: "/robot_pose",
+          messageType: "geometry_msgs/Pose",
+          throttle_rate: 100,
         });
         poseListener.subscribe(function(pose) {
-          if (pose.transforms[0].child_frame_id == "base_footprint") {
-            robotMarker.x = pose.transforms[0].transform.translation.x;
-            robotMarker.y = pose.transforms[0].transform.translation.y;
-            robotMarker.rotation = stage.rosQuaternionToGlobalTheta(
-              pose.transforms[0].transform.rotation
-            );
-          }
+          robotMarker.x = pose.position.x;
+          robotMarker.y = -pose.position.y;
+
+          robotMarker.rotation = stage.rosQuaternionToGlobalTheta(
+            pose.orientation
+          );
         });
+
         gridClient.on("change", function() {
           window.viewer.scaleToDimensions(
             gridClient.currentGrid.width,
             gridClient.currentGrid.height
           );
+          window.viewer.shift(-10, -10);
         });
       },
       addNav() {
+        this.velocity = {
+          linear: {
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+          },
+          angular: {
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+          },
+        };
         let that = this;
+        this.cmdVel = new window.ROSLIB.Topic({
+          ros: that.ROS,
+          name: "/cmd_vel",
+          messageType: "geometry_msgs/Twist",
+        });
         let map = document.querySelector("#map");
         if (map.firstChild) map.firstChild.remove();
-
         window.viewer = new window.ROS2D.Viewer({
           divID: "map",
           width: 800,
@@ -484,19 +533,35 @@
         window.viewer.shift(this.shiftX, this.shiftY);
       },
       forward() {
-        return null;
+        if (this.cmdVel) {
+          this.velocity.linear.x = this.velocity.linear.x + 0.2;
+          this.cmdVel.publish(new window.ROSLIB.Message(this.velocity));
+        }
       },
       left() {
-        return null;
+        if (this.cmdVel) {
+          this.velocity.angular.z = this.velocity.angular.z + 0.5;
+          this.cmdVel.publish(new window.ROSLIB.Message(this.velocity));
+        }
       },
       down() {
-        return null;
+        if (this.cmdVel) {
+          this.velocity.linear.x = this.velocity.linear.x - 0.2;
+          this.cmdVel.publish(new window.ROSLIB.Message(this.velocity));
+        }
       },
       right() {
-        return null;
+        if (this.cmdVel) {
+          this.velocity.angular.z = this.velocity.angular.z - 0.5;
+          this.cmdVel.publish(new window.ROSLIB.Message(this.velocity));
+        }
       },
       stop() {
-        return null;
+        if (this.cmdVel) {
+          this.velocity.linear.x = 0;
+          this.velocity.angular.z = 0;
+          this.cmdVel.publish(new window.ROSLIB.Message(this.velocity));
+        }
       },
       Keyboard(signal) {
         if (signal) {
